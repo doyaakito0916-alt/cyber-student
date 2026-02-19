@@ -6,7 +6,8 @@ export async function updateSession(request: NextRequest) {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Missing Supabase environment variables")
+    // 環境変数未設定時はセッション更新をスキップ
+    return NextResponse.next({ request })
   }
 
   let supabaseResponse = NextResponse.next({
