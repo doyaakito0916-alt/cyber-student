@@ -10,6 +10,7 @@ import type { VisibilityType } from "@/types"
 import { AuthUI } from "@/components/auth-ui"
 import { LoginScreen } from "@/components/login-screen"
 import { ProfileEditModal } from "@/components/profile-edit-modal"
+import { BusinessCardExport } from "@/components/business-card-export"
 import { useProfile } from "@/hooks/use-profile"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { createClient } from "@/lib/supabase/client"
@@ -33,6 +34,9 @@ import {
   Pencil,
   Link2,
   X,
+  GitCompare,
+  FileText,
+  CreditCard,
 } from "lucide-react"
 
 // Sample data
@@ -390,7 +394,45 @@ function StudentPortfolioContent() {
             </section>
           </TabsContent>
 
-          <TabsList className="w-full grid grid-cols-2 bg-muted/20 border border-border rounded-lg p-1 mt-6">
+          {/* Card Tab - 名刺エクスポート */}
+          <TabsContent value="card" className="space-y-6">
+            <section className="bg-card/50 border border-border rounded-xl p-6 backdrop-blur-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <CreditCard className="w-5 h-5 text-neon-cyan" />
+                <h2 className="text-lg font-bold font-sans tracking-wide">
+                  BUSINESS <span className="text-neon-pink">CARD</span>
+                </h2>
+              </div>
+              <BusinessCardExport
+                nickname={profile?.name || "ゲスト"}
+                occupation={profile?.occupation || "フルスタック開発者"}
+                id={profile?.id || "guest"}
+                level={profile?.level || 1}
+                tags={myTags}
+                profileUrl={profileUrl}
+              />
+            </section>
+          </TabsContent>
+
+          {/* 機能リンク（比較・書類作成） */}
+          <div className="flex gap-2 mt-4">
+            <a
+              href="/compare"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan text-sm font-mono hover:bg-neon-cyan/20 transition-colors"
+            >
+              <GitCompare className="w-4 h-4" />
+              他者と比較
+            </a>
+            <a
+              href="/documents"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-neon-pink/50 bg-neon-pink/10 text-neon-pink text-sm font-mono hover:bg-neon-pink/20 transition-colors"
+            >
+              <FileText className="w-4 h-4" />
+              書類作成
+            </a>
+          </div>
+
+          <TabsList className="w-full grid grid-cols-3 bg-muted/20 border border-border rounded-lg p-1 mt-4">
             <TabsTrigger
               value="id"
               className="font-mono text-sm data-[state=active]:bg-neon-cyan/20 data-[state=active]:text-neon-cyan data-[state=active]:shadow-[0_0_10px_oklch(0.75_0.15_200_/_0.3)]"
@@ -402,6 +444,12 @@ function StudentPortfolioContent() {
               className="font-mono text-sm data-[state=active]:bg-neon-blue/20 data-[state=active]:text-neon-blue data-[state=active]:shadow-[0_0_10px_oklch(0.7_0.2_250_/_0.3)]"
             >
               STATUS
+            </TabsTrigger>
+            <TabsTrigger
+              value="card"
+              className="font-mono text-sm data-[state=active]:bg-neon-pink/20 data-[state=active]:text-neon-pink data-[state=active]:shadow-[0_0_10px_oklch(0.65_0.22_330_/_0.3)]"
+            >
+              CARD
             </TabsTrigger>
           </TabsList>
         </Tabs>

@@ -8,6 +8,11 @@ export interface Profile {
   avatar_url: string | null
   level: number
   exp: number
+  bio?: string
+  education?: string
+  skills?: string[]
+  contact_email?: string
+  occupation?: string
 }
 
 export interface MyTag {
@@ -34,6 +39,56 @@ export const studentStats: StatData[] = [
   { label: "技術力", value: 88, maxValue: 100 },
   { label: "精神力", value: 65, maxValue: 100 },
 ]
+
+// ユーザーステータス（DB連動）
+export interface UserStats {
+  id?: string
+  profile_id: string
+  intelligence: number
+  stamina: number
+  creativity: number
+  cooperation: number
+  tech_skill: number
+  mental: number
+}
+
+// UserStats を StatData[] に変換するヘルパー
+export function userStatsToStatData(stats: UserStats): StatData[] {
+  return [
+    { label: "知力", value: stats.intelligence, maxValue: 100 },
+    { label: "体力", value: stats.stamina, maxValue: 100 },
+    { label: "創造力", value: stats.creativity, maxValue: 100 },
+    { label: "協調性", value: stats.cooperation, maxValue: 100 },
+    { label: "技術力", value: stats.tech_skill, maxValue: 100 },
+    { label: "精神力", value: stats.mental, maxValue: 100 },
+  ]
+}
+
+// 名刺スタイル
+export type BusinessCardStyle = "dark" | "light"
+
+// 履歴書データ
+export interface ResumeData {
+  name: string
+  contactEmail: string
+  occupation: string
+  bio: string
+  education: string
+  skills: string[]
+  tags: MyTag[]
+}
+
+// ポートフォリオデータ
+export interface PortfolioData {
+  name: string
+  id: string
+  occupation: string
+  bio: string
+  stats: StatData[]
+  tags: MyTag[]
+  level: number
+  exp: number
+}
 
 // レアリティの順序（ソート用）
 export const RARITY_ORDER: TagRarity[] = ["legendary", "epic", "rare", "common"]
