@@ -4,18 +4,16 @@ import { useState, useEffect, Suspense, useMemo } from "react"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import { DocumentForm } from "@/components/document-form"
-import { ResumeDocument } from "@/components/document-resume"
-import { PortfolioDocument } from "@/components/document-portfolio"
 import { AuthUI } from "@/components/auth-ui"
 import { createClient } from "@/lib/supabase/client"
 import { studentStats } from "@/types"
 import type { Profile, MyTag } from "@/types"
 import type { User } from "@supabase/supabase-js"
-import { ArrowLeft, FileText, Download, BookOpen, Briefcase } from "lucide-react"
+import { ArrowLeft, FileText, BookOpen, Briefcase } from "lucide-react"
 
-// PDFDownloadLink を dynamic import（SSR無効化）
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+// @react-pdf/renderer を含むコンポーネントは全て dynamic import でSSR無効化
+const PdfDownloadSection = dynamic(
+  () => import("@/components/pdf-download-section").then((mod) => mod.PdfDownloadSection),
   { ssr: false, loading: () => <span className="text-sm font-mono text-muted-foreground">PDF準備中...</span> }
 )
 
@@ -177,31 +175,12 @@ function DocumentsContent() {
             上のフォームに情報を入力してからダウンロードしてください。タグ情報はプロフィールから自動的に取得されます。
           </p>
 
-          <PDFDownloadLink
-            document={
-              docType === "resume" ? (
-                <ResumeDocument profile={profile} tags={myTags} />
-              ) : (
-                <PortfolioDocument profile={profile} stats={studentStats} tags={myTags} />
-              )
-            }
-            fileName={`cyber-student-${docType}-${profile.id}.pdf`}
-          >
-            {({ loading: pdfLoading }) => (
-              <button
-                type="button"
-                disabled={pdfLoading}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-neon-pink/50 bg-neon-pink/10 text-neon-pink text-sm font-mono hover:bg-neon-pink/20 transition-colors disabled:opacity-50"
-              >
-                <Download className="w-4 h-4" />
-                {pdfLoading
-                  ? "PDF生成中..."
-                  : docType === "resume"
-                  ? "履歴書PDFをダウンロード"
-                  : "ポートフォリオPDFをダウンロード"}
-              </button>
-            )}
-          </PDFDownloadLink>
+          <PdfDownloadSection
+            docType={docType}
+            profile={profile}
+            tags={myTags}
+            stats={studentStats}
+          />
         </section>
 
         {/* Footer */}

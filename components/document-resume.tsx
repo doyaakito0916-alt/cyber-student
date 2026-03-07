@@ -1,6 +1,6 @@
 "use client"
 
-import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer"
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer"
 import type { MyTag, Profile } from "@/types"
 
 // PDF用のスタイル
